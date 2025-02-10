@@ -12,3 +12,4 @@
 /Users/jamaraimer/Desktop/Code/Programming Languages/C#/Quadproject/QTProject/obj/Debug/net6.0/QTProject.pdb
 /Users/jamaraimer/Desktop/Code/Programming Languages/C#/Quadproject/QTProject/obj/Debug/net6.0/QTProject.genruntimeconfig.cache
 /Users/jamaraimer/Desktop/Code/Programming Languages/C#/Quadproject/QTProject/obj/Debug/net6.0/ref/QTProject.dll
+/Users/jamaraimer/Desktop/Code/Programming Languages/C#/Quadproject/QTProject/obj/Debug/net6.0/QTProject.sourcelink.json

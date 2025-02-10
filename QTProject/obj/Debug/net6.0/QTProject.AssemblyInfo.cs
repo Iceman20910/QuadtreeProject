@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QTProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+718eea67e10cd6641496ffd4d629f37fd4884864")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+83f2dc9001f5ba87fcf026dadfbea281bc1dfccb")]
 [assembly: System.Reflection.AssemblyProductAttribute("QTProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QTProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
