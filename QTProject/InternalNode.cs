@@ -4,11 +4,27 @@ public class InternalNode : Node
 {
     private Node[] children;
 
-    public InternalNode(int x, int y, int length, int width)
-        : base(x, y, length, width)
-    {
-        children = new Node[4];
-    }
+public InternalNode(int x, int y, int length, int width)
+    : base(x, y, length, width)
+{
+    children = new Node[4];
+    
+    // Calculate quadrant sizes
+    int halfLength = length / 2;
+    int halfWidth = width / 2;
+
+    // Top-left quadrant
+    children[0] = new LeafNode(x, y, halfLength, halfWidth);
+    
+    // Top-right quadrant
+    children[1] = new LeafNode(x + halfLength, y, halfLength, halfWidth);
+    
+    // Bottom-left quadrant
+    children[2] = new LeafNode(x, y + halfWidth, halfLength, halfWidth);
+    
+    // Bottom-right quadrant
+    children[3] = new LeafNode(x + halfLength, y + halfWidth, halfLength, halfWidth);
+}
 
     private int GetQuadrantIndex(int x, int y)
     {

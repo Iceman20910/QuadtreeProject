@@ -7,10 +7,10 @@ public class QuadTree
     private Node root;
     private object lockObject = new object();
 
-    public QuadTree()
-    {
-        root = new InternalNode(0, 0, 100, 100);
-    }
+public QuadTree()
+{
+    root = new LeafNode(0, 0, 100, 100);
+}
 
     public void Insert(int x, int y, int length, int width)
     {
