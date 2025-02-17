@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+
 public class QuadTree
 {
     private Node root;
@@ -101,11 +102,11 @@ public class QuadTree
         string[] lines = File.ReadAllLines(filePath);
         foreach (string line in lines)
         {
-            // Remove semicolon from the end of the line
-            line = line.Trim().TrimEnd(';');
+            // Create trimmedLine variable
+            string trimmedLine = line.Trim().TrimEnd(';');
 
             // insert 7 4 8 5
-            string[] parts = line.Split(' ');
+            string[] parts = trimmedLine.Split(' ');
             switch (parts[0].ToLower())
             {
                 case "insert":
@@ -124,7 +125,7 @@ public class QuadTree
                     Dump();
                     break;
                 default:
-                    Console.WriteLine($"Error: Invalid command - {line}");
+                    Console.WriteLine($"Error: Invalid command - {trimmedLine}");
                     break;
             }
         }
