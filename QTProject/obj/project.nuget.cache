@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KN/3UFfRmJw=",
+  "dgSpecHash": "Tbs1TdUIPu4=",
   "success": true,
   "projectFilePath": "/Users/jamaraimer/Desktop/Code/Programming Languages/C#/Quadproject/QTProject/QTProject.csproj",
-  "expectedPackageFiles": [
-    "/Users/jamaraimer/.nuget/packages/microsoft.netcore.app.ref/6.0.36/microsoft.netcore.app.ref.6.0.36.nupkg.sha512",
-    "/Users/jamaraimer/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.36/microsoft.aspnetcore.app.ref.6.0.36.nupkg.sha512",
-    "/Users/jamaraimer/.nuget/packages/microsoft.netcore.app.host.osx-arm64/6.0.36/microsoft.netcore.app.host.osx-arm64.6.0.36.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }
