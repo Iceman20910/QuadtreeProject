@@ -1,79 +1,109 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 
+/// <summary>
+/// Represents an internal node in the quadtree.
+/// </summary>
 public class InternalNode : Node
 {
     private Node[] children;
 
-public InternalNode(int x, int y, int length, int width)
-    : base(x, y, length, width)
-{
-    children = new Node[4];
-    
-    // Calculate quadrant sizes
-    int halfLength = length / 2;
-    int halfWidth = width / 2;
-
-    // Top-left quadrant
-    children[0] = new LeafNode(x, y, halfLength, halfWidth);
-    
-    // Top-right quadrant
-    children[1] = new LeafNode(x + halfLength, y, halfLength, halfWidth);
-    
-    // Bottom-left quadrant
-    children[2] = new LeafNode(x, y + halfWidth, halfLength, halfWidth);
-    
-    // Bottom-right quadrant
-    children[3] = new LeafNode(x + halfLength, y + halfWidth, halfLength, halfWidth);
-}
-
-    private int GetQuadrantIndex(int x, int y)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InternalNode"/> class.
+    /// </summary>
+    /// <param name="rectangle">The rectangle defining this node's space.</param>
+    public InternalNode(Rectangle rectangle) : base(rectangle)
     {
-        int quadrantX = x < X + Length / 2 ? 0 : 1;
-        int quadrantY = y < Y + Width / 2 ? 0 : 2;
+        children = new Node[4];
+
+        // Calculate quadrant sizes
+        int halfLength = rectangle.Length / 2;
+        int halfWidth = rectangle.Width / 2;
+
+        // Initialize child nodes for each quadrant
+        children[0] = new LeafNode(new Rectangle(rectangle.X, rectangle.Y, halfLength, halfWidth)); // Top-left
+        children[1] = new LeafNode(new Rectangle(rectangle.X + halfLength, rectangle.Y, halfLength, halfWidth)); // Top-right
+        children[2] = new LeafNode(new Rectangle(rectangle.X, rectangle.Y + halfWidth, halfLength, halfWidth)); // Bottom-left
+        children[3] = new LeafNode(new Rectangle(rectangle.X + halfLength, rectangle.Y + halfWidth, halfLength, halfWidth)); // Bottom-right
+    }
+
+    private int GetQuadrantIndex(Rectangle rectangle)
+    {
+        // Calculate which quadrant the rectangle belongs to
+        int quadrantX = rectangle.X < Rectangle.X + Rectangle.Length / 2 ? 0 : 1;
+        int quadrantY = rectangle.Y < Rectangle.Y + Rectangle.Width / 2 ? 0 : 2;
         return quadrantX + quadrantY;
     }
 
+    /// <summary>
+    /// Inserts a rectangle into the appropriate child node.
+    /// </summary>
+    /// <param name="rectangle">The rectangle to insert.</param>
+    /// <returns>True if the rectangle was successfully inserted, false otherwise.</returns>
     public override bool Insert(Rectangle rectangle)
     {
-        int index = GetQuadrantIndex(rectangle.X, rectangle.Y);
+        int index = GetQuadrantIndex(rectangle);
+        // Ensure the child node exists
         if (children[index] == null)
         {
-            int childLength = Length / 2;
-            int childWidth = Width / 2;
-            int childX = X + (index % 2 == 0 ? 0 : childLength);
-            int childY = Y + (index < 2 ? 0 : childWidth);
-            children[index] = new LeafNode(childX, childY, childLength, childWidth);
+            // Create a new LeafNode if it doesn't exist
+            children[index] = new LeafNode(new Rectangle(
+                index % 2 == 0 ? Rectangle.X : Rectangle.X + Rectangle.Length / 2,
+                index < 2 ? Rectangle.Y : Rectangle.Y + Rectangle.Width / 2,
+                Rectangle.Length / 2,
+                Rectangle.Width / 2
+            ));
         }
         return children[index].Insert(rectangle);
     }
 
-    public override Rectangle Find(int x, int y)
+    /// <summary>
+    /// Finds a rectangle at the given coordinates.
+    /// </summary>
+    /// <param name="rectangle">The rectangle to find.</param>
+    /// <returns>The found rectangle, or null if not found.</returns>
+    public override Rectangle Find(Rectangle rectangle)
     {
-        int index = GetQuadrantIndex(x, y);
+        int index = GetQuadrantIndex(rectangle);
         if (children[index] == null)
             return null;
-        return children[index].Find(x, y);
+        return children[index].Find(rectangle);
     }
 
-    public override bool Delete(int x, int y)
+    /// <summary>
+    /// Deletes a rectangle from the quadtree.
+    /// </summary>
+    /// <param name="rectangle">The rectangle to delete.</param>
+    /// <returns>True if the rectangle was deleted, false otherwise.</returns>
+    public override bool Delete(Rectangle rectangle)
     {
-        int index = GetQuadrantIndex(x, y);
+        int index = GetQuadrantIndex(rectangle);
         if (children[index] == null)
             return false;
-        return children[index].Delete(x, y);
+        return children[index].Delete(rectangle);
     }
 
-    public override bool Update(int x, int y, int length, int width)
+    /// <summary>
+    /// Updates a rectangle in the quadtree.
+    /// </summary>
+    /// <param name="rectangle">The rectangle to update.</param>
+    /// <returns>True if the rectangle was updated, false otherwise.</returns>
+    public override bool Update(Rectangle rectangle)
     {
-        int index = GetQuadrantIndex(x, y);
+        int index = GetQuadrantIndex(rectangle);
         if (children[index] == null)
             return false;
-        return children[index].Update(x, y, length, width);
+        return children[index].Update(rectangle);
     }
 
+    /// <summary>
+    /// Dumps the structure of the internal node.
+    /// </summary>
+    /// <param name="indent">The indentation level for display.</param>
     public override void Dump(int indent)
     {
-        Console.WriteLine($"{new string(' ', indent)}Internal Node - ({X}, {Y}) - {Length}x{Width}");
+        Console.WriteLine($"{new string(' ', indent)}Internal Node - ({Rectangle.X}, {Rectangle.Y}) - {Rectangle.Length}x{Rectangle.Width}");
         foreach (Node child in children)
         {
             if (child != null)
