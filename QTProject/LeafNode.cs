@@ -32,7 +32,9 @@ public class LeafNode : Node
         }
         else
         {
+            // BS: You're making two slight mistakes here. Look at what this function does.
             return Split(rectangle); // Split if max rectangles reached
+            // BS: After you make the new Internal node, you never added the rectangle argument. Only the old rectangles are in the new node.
         }
     }
 
@@ -49,6 +51,7 @@ public class LeafNode : Node
             parent.Insert(rect); // Reinsert existing rectangles
         }
         parent.Insert(rectangle); // Insert the new rectangle
+        // BS: you made the new InternalNode, but you don't actually do anything with it.
         // Replace this leaf node with the new parent in the tree (omitted in this context)
         return true; // Return true after splitting
     }
