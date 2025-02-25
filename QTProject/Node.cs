@@ -19,7 +19,7 @@ public abstract class Node
     /// </summary>
     /// <param name="rectangle">The rectangle to insert.</param>
     /// <returns>True if the rectangle was successfully inserted, false otherwise.</returns>
-    public abstract bool Insert(Rectangle rectangle);
+    public abstract Node Insert(Rectangle rectangle);
 
     /// <summary>
     /// Finds a rectangle at the specified coordinates.
