@@ -55,7 +55,7 @@ public class QuadTree
             return;
         }
 
-        Rectangle foundRectangle = root.Find(rectangle);
+        Rectangle foundRectangle = root.Find(rectangle); // BS: you should return the rectangle. Remember to update documentation.
         if (foundRectangle != null)
         {
             Console.WriteLine($"Rectangle at {foundRectangle.X}, {foundRectangle.Y}: {foundRectangle.Length}x{foundRectangle.Width}");
