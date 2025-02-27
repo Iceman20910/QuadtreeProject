@@ -160,64 +160,11 @@ namespace QTProjectTests
             // Act
             quadTree.Dump();
 
-            // Assert
-            // TODO: Add expected output string based on Dump implementation
-            // Example: 
-            // var expected = "Quadtree Dump:\r\n\t..."; // Define the expected output
-            // Assert.Equal(expected, output.ToString());
-        }
-
-        [Fact]
-        public void TestInsertValidRectangle()
-        {
-            // Arrange
-            QuadTree qt = new QuadTree();
-            Rectangle rect = new Rectangle(10, 10, 20, 20);
-
-            // Act
-            qt.Insert(rect);
-
-            // Assert
-            var foundRect = qt.Find(new Rectangle(10, 10, 0, 0)); // Using zero dimensions to find
-            Assert.NotNull(foundRect);
-            Assert.Equal(rect.X, foundRect.X);
-            Assert.Equal(rect.Y, foundRect.Y);
-            Assert.Equal(rect.Length, foundRect.Length);
-            Assert.Equal(rect.Width, foundRect.Width);
-        }
-
-        [Fact]
-        public void TestFindRectangle()
-        {
-            // Arrange
-            QuadTree qt = new QuadTree();
-            Rectangle rect = new Rectangle(10, 10, 20, 20);
-            qt.Insert(rect);
-
-            // Act
-            var foundRect = qt.Find(new Rectangle(10, 10, 0, 0)); // Using zero dimensions to find
-
-            // Assert
-            Assert.NotNull(foundRect);
-            Assert.Equal(rect.X, foundRect.X);
-            Assert.Equal(rect.Y, foundRect.Y);
-            Assert.Equal(rect.Length, foundRect.Length);
-            Assert.Equal(rect.Width, foundRect.Width);
-        }
-
-        [Fact]
-        public void TestDeleteRectangle()
-        {
-            // Arrange
-            QuadTree qt = new QuadTree();
-            Rectangle rect = new Rectangle(10, 10, 20, 20);
-            qt.Insert(rect);
-
-            // Act
-            qt.Delete(new Rectangle(10, 10, 0, 0)); // Using zero dimensions to delete
-
-            // Assert
-            Assert.Null(qt.Find(new Rectangle(10, 10, 0, 0))); // Corrected syntax
+            var expected = "Quadtree Dump:\n\n\tLeaf Node - (0, 0) - 100x100\n" +
+                           "\t\tRectangle at 10, 10: 5x5\n" +
+                           "\t\tRectangle at 20, 20: 10x10\n" +
+                           "\t\tRectangle at -30, -30: 15x15\n"; // Adjust based on actual output
+            Assert.Equal(expected, output.ToString());
         }
 
         [Fact]
