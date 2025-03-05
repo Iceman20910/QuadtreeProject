@@ -11,7 +11,19 @@ class Program
         }
 
         string commandFilePath = args[0];
-        QuadTree quadTree = new QuadTree();
-        quadTree.ProcessCommands(commandFilePath);
+        
+        try
+        {
+            QuadTree quadTree = new QuadTree();
+            quadTree.ProcessCommands(commandFilePath);
+        }
+        catch (System.IO.FileNotFoundException)
+        {
+            Console.WriteLine($"Error: The file '{commandFilePath}' was not found.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while processing commands: {ex.Message}");
+        }
     }
 }

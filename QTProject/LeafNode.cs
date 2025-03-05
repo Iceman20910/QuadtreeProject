@@ -6,116 +6,85 @@ using System.Collections.Generic;
 /// </summary>
 public class LeafNode : Node
 {
-    private List<Rectangle> rectangles; // List to store rectangles
-    private const int MAX_RECTANGLES = 5; // Maximum rectangles before splitting
+    private List<Rectangle> rectangles;
+    private const int MAX_RECTANGLES = 5;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LeafNode"/> class.
-    /// </summary>
-    /// <param name="rectangle">The rectangle defining this node's space.</param>
     public LeafNode(Rectangle rectangle) : base(rectangle)
     {
         rectangles = new List<Rectangle>();
     }
 
-    /// <summary>
-    /// Inserts a rectangle into this leaf node.
-    /// </summary>
-    /// <param name="rectangle">The rectangle to insert.</param>
-    /// <returns>True if the rectangle was successfully inserted, false if it needs to split.</returns>
-    public override bool Insert(Rectangle rectangle)
+    public override Node Insert(Rectangle rectangle)
     {
+        if (rectangles.Exists(r => r.Equals(rectangle)))
+        {
+            throw new DoubleInsertException("A rectangle already exists at the specified coordinates.");
+        }
+
         if (rectangles.Count < MAX_RECTANGLES)
         {
             rectangles.Add(rectangle);
-            return true;
+            return this;
         }
         else
         {
-            // BS: You're making two slight mistakes here. Look at what this function does.
-            return Split(rectangle); // Split if max rectangles reached
-            // BS: After you make the new Internal node, you never added the rectangle argument. Only the old rectangles are in the new node.
+            return Split(rectangle);
         }
     }
 
-    /// <summary>
-    /// Splits this leaf node into an internal node and transfers rectangles.
-    /// </summary>
-    /// <param name="rectangle">The rectangle to insert that caused the split.</param>
-    /// <returns>True after splitting and reinserting rectangles.</returns>
-    private bool Split(Rectangle rectangle)
+    private Node Split(Rectangle rectangle)
     {
-        InternalNode parent = new InternalNode(Rectangle); // Create a new internal node
-        foreach (Rectangle rect in rectangles)
+        InternalNode newInternalNode = new InternalNode(Rectangle);
+
+        foreach (var rect in rectangles)
         {
-            parent.Insert(rect); // Reinsert existing rectangles
+            newInternalNode.Insert(rect);
         }
-        parent.Insert(rectangle); // Insert the new rectangle
-        // BS: you made the new InternalNode, but you don't actually do anything with it.
-        // Replace this leaf node with the new parent in the tree (omitted in this context)
-        return true; // Return true after splitting
+
+        newInternalNode.Insert(rectangle);
+
+        return newInternalNode;
     }
 
-    /// <summary>
-    /// Finds a rectangle at the given coordinates.
-    /// </summary>
-    /// <param name="rectangle">The rectangle to find (with coordinates only).</param>
-    /// <returns>The found rectangle, or null if not found.</returns>
-    public override Rectangle Find(Rectangle rectangle)
+    public override Rectangle? Find(Rectangle rectangle)
     {
         foreach (Rectangle rect in rectangles)
         {
-            // Check if the rectangle's coordinates match
-            if (rect.Contains(rectangle)) // Using Contains method for a better check
+            if (rect.Contains(rectangle))
                 return rect;
         }
-        return null; // Return null if not found
+        return null;
     }
 
-    /// <summary>
-    /// Deletes a rectangle from this leaf node.
-    /// </summary>
-    /// <param name="rectangle">The rectangle to delete.</param>
-    /// <returns>True if the rectangle was deleted, false otherwise.</returns>
     public override bool Delete(Rectangle rectangle)
     {
-        Rectangle rectToRemove = Find(rectangle);
+        var rectToRemove = Find(rectangle);
         if (rectToRemove != null)
         {
-            rectangles.Remove(rectToRemove); // Remove the found rectangle
+            rectangles.Remove(rectToRemove);
             return true;
         }
-        return false; // Return false if not found
+        return false;
     }
 
-    /// <summary>
-    /// Updates a rectangle in this leaf node.
-    /// </summary>
-    /// <param name="rectangle">The rectangle to update, with new dimensions.</param>
-    /// <returns>True if the rectangle was updated, false otherwise.</returns>
     public override bool Update(Rectangle rectangle)
     {
-        Rectangle rectToUpdate = Find(rectangle);
+        var rectToUpdate = Find(rectangle);
         if (rectToUpdate != null)
         {
-            // Update dimensions of the found rectangle
-            rectToUpdate.Length = rectangle.Length;
-            rectToUpdate.Width = rectangle.Width;
+            Delete(rectToUpdate);
+            Insert(rectangle);
             return true;
         }
-        return false; // Return false if not found
+        return false;
     }
 
-    /// <summary>
-    /// Dumps the structure of the leaf node.
-    /// </summary>
-    /// <param name="indent">The indentation level for display.</param>
     public override void Dump(int indent)
     {
-        Console.WriteLine($"{new string(' ', indent)}Leaf Node - ({Rectangle.X}, {Rectangle.Y}) - {Rectangle.Length}x{Rectangle.Width}");
+        Console.WriteLine($"{new string(' ', indent)}Leaf Node - ({Rectangle.X}, {Rectangle.Y}) - {Rectangle.Width}x{Rectangle.Height}");
         foreach (Rectangle rect in rectangles)
         {
-            Console.WriteLine($"{new string(' ', indent + 4)}Rectangle at {rect.X}, {rect.Y}: {rect.Length}x{rect.Width}");
+            Console.WriteLine($"{new string(' ', indent + 2)}Rectangle at {rect.X}, {rect.Y}: {rect.Width}x{rect.Height}");
         }
     }
 }

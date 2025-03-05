@@ -3,73 +3,51 @@
 /// </summary>
 public class Rectangle
 {
-    /// <summary>
-    /// Gets or sets the X coordinate of the rectangle.
-    /// </summary>
     public int X { get; set; }
-
-    /// <summary>
-    /// Gets or sets the Y coordinate of the rectangle.
-    /// </summary>
     public int Y { get; set; }
-
-    /// <summary>
-    /// Gets or sets the length of the rectangle.
-    /// </summary>
-    public int Length { get; set; }
-
-    /// <summary>
-    /// Gets or sets the width of the rectangle.
-    /// </summary>
+    public int Height { get; set; }
     public int Width { get; set; }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Rectangle"/> class.
-    /// </summary>
-    /// <param name="x">The X coordinate of the rectangle.</param>
-    /// <param name="y">The Y coordinate of the rectangle.</param>
-    /// <param name="length">The length of the rectangle.</param>
-    /// <param name="width">The width of the rectangle.</param>
-    public Rectangle(int x, int y, int length, int width)
+    public Rectangle(int x, int y, int height, int width)
     {
         X = x;
         Y = y;
-        Length = length;
+        Height = height;
         Width = width;
     }
 
-    /// <summary>
-    /// Determines whether the current rectangle contains another rectangle.
-    /// </summary>
-    /// <param name="other">The rectangle to check.</param>
-    /// <returns>True if the current rectangle contains the other rectangle; otherwise, false.</returns>
     public bool Contains(Rectangle other)
     {
         return X <= other.X &&
                Y <= other.Y &&
-               X + Length >= other.X + other.Length &&
-               Y + Width >= other.Y + other.Width;
+               X + Width >= other.X + other.Width &&
+               Y + Height >= other.Y + other.Height;
     }
 
-    /// <summary>
-    /// Determines if the current rectangle intersects with another rectangle.
-    /// </summary>
-    /// <param name="other">The rectangle to check for intersection.</param>
-    /// <returns>True if the rectangles intersect; otherwise, false.</returns>
     public bool Intersects(Rectangle other)
     {
-        return !(other.X > X + Length || 
-                 other.X + other.Length < X || 
-                 other.Y > Y + Width || 
-                 other.Y + other.Width < Y);
+        return !(other.X > X + Width ||
+                 other.X + other.Width < X ||
+                 other.Y > Y + Height ||
+                 other.Y + other.Height < Y);
     }
 
-    /// <summary>
-    /// Returns a string representation of the rectangle.
-    /// </summary>
-    /// <returns>A string that represents the rectangle.</returns>
     public override string ToString()
     {
-        return $"Rectangle at ({X}, {Y}) with dimensions {Length}x{Width}";
+        return $"Rectangle at ({X}, {Y}) with dimensions {Width}x{Height}";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is Rectangle other)
+        {
+            return X == other.X && Y == other.Y && Width == other.Width && Height == other.Height;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y, Width, Height);
     }
 }

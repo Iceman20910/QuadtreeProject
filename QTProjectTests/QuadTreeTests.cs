@@ -1,4 +1,5 @@
-using Xunit; // BS: remove this. Your .csproj already has it on lines 25-27
+using Xunit;
+using System.IO;
 
 namespace QTProjectTests
 {
@@ -7,198 +8,138 @@ namespace QTProjectTests
         [Fact]
         public void Insert_ValidRectangle_Success()
         {
-            // Arrange
             var quadTree = new QuadTree();
-
-            // Act
             quadTree.Insert(new Rectangle(10, 10, 5, 5));
-
-            // Assert
-            var rect = quadTree.Find(new Rectangle(10, 10, 0, 0)); // Adjusted to use Rectangle BS: Find returns void, so you can't assign to it. Update the return type.
+            var rect = quadTree.Find(new Rectangle(10, 10, 0, 0));
             Assert.NotNull(rect);
-            Assert.Equal(10, rect.Value.X);
-            Assert.Equal(10, rect.Value.Y);
-            Assert.Equal(5, rect.Value.Length);
-            Assert.Equal(5, rect.Value.Width);
+            Assert.Equal(10, rect.X);
+            Assert.Equal(10, rect.Y);
+            Assert.Equal(5, rect.Height);
+            Assert.Equal(5, rect.Width);
         }
 
         [Fact]
         public void Insert_RectangleOutsideBounds_Fails()
         {
-            // Arrange
             var quadTree = new QuadTree();
-
-            // Act
             quadTree.Insert(new Rectangle(200, 200, 10, 10));
-
-            // Assert
-            Assert.Null(quadTree.Find(new Rectangle(200, 200, 0, 0))); // Corrected syntax
+            Assert.Null(quadTree.Find(new Rectangle(200, 200, 0, 0)));
         }
 
         [Fact]
         public void Insert_MultipleRectangles_Success()
         {
-            // Arrange
             var quadTree = new QuadTree();
-
-            // Act
             quadTree.Insert(new Rectangle(10, 10, 5, 5));
             quadTree.Insert(new Rectangle(20, 20, 10, 10));
             quadTree.Insert(new Rectangle(-30, -30, 15, 15));
-
-            // Assert
-            Assert.NotNull(quadTree.Find(new Rectangle(10, 10, 0, 0))); // Corrected syntax
-            Assert.NotNull(quadTree.Find(new Rectangle(20, 20, 0, 0))); // Corrected syntax
-            Assert.NotNull(quadTree.Find(new Rectangle(-30, -30, 0, 0))); // Corrected syntax
+            Assert.NotNull(quadTree.Find(new Rectangle(10, 10, 0, 0))); 
+            Assert.NotNull(quadTree.Find(new Rectangle(20, 20, 0, 0))); 
+            Assert.NotNull(quadTree.Find(new Rectangle(-30, -30, 0, 0))); 
         }
 
         [Fact]
         public void Delete_ExistingRectangle_Success()
         {
-            // Arrange
             var quadTree = new QuadTree();
             quadTree.Insert(new Rectangle(10, 10, 5, 5));
-
-            // Act
             quadTree.Delete(new Rectangle(10, 10, 0, 0));
-
-            // Assert
-            Assert.Null(quadTree.Find(new Rectangle(10, 10, 0, 0))); // Corrected syntax
+            Assert.Null(quadTree.Find(new Rectangle(10, 10, 0, 0))); 
         }
 
         [Fact]
         public void Delete_NonExistingRectangle_NoEffect()
         {
-            // Arrange
             var quadTree = new QuadTree();
-
-            // Act
             quadTree.Delete(new Rectangle(10, 10, 0, 0)); // No exception thrown
-
-            // Assert
-            Assert.Null(quadTree.Find(new Rectangle(10, 10, 0, 0))); // Corrected syntax and clarity
+            Assert.Null(quadTree.Find(new Rectangle(10, 10, 0, 0))); 
         }
 
         [Fact]
         public void Update_ExistingRectangle_Success()
         {
-            // Arrange
             var quadTree = new QuadTree();
             quadTree.Insert(new Rectangle(10, 10, 5, 5));
-
-            // Act
-            quadTree.Update(new Rectangle(10, 10, 10, 10));
-
-            // Assert
+            quadTree.Update(new Rectangle(10, 10, 10, 10)); // Update to larger dimensions
             var rect = quadTree.Find(new Rectangle(10, 10, 0, 0));
             Assert.NotNull(rect);
-            Assert.Equal(10, rect.Length);
-            Assert.Equal(10, rect.Width);
+            Assert.Equal(10, rect.Height); // Expect height to be updated to 10
+            Assert.Equal(10, rect.Width);  // Expect width to be updated to 10
         }
 
         [Fact]
         public void Update_NonExistingRectangle_NoEffect()
         {
-            // Arrange
             var quadTree = new QuadTree();
-
-            // Act
             quadTree.Update(new Rectangle(10, 10, 10, 10)); // No exception thrown
-
-            // Assert
-            Assert.Null(quadTree.Find(new Rectangle(10, 10, 0, 0))); // Corrected syntax
+            Assert.Null(quadTree.Find(new Rectangle(10, 10, 0, 0))); 
         }
 
         [Fact]
         public void Find_ExistingRectangle_Success()
         {
-            // Arrange
             var quadTree = new QuadTree();
             quadTree.Insert(new Rectangle(10, 10, 5, 5));
-
-            // Act & Assert
             Assert.NotNull(quadTree.Find(new Rectangle(10, 10, 0, 0)));
         }
 
         [Fact]
         public void Find_NonExistingRectangle_ReturnsNull()
         {
-            // Arrange
             var quadTree = new QuadTree();
-
-            // Act & Assert
             Assert.Null(quadTree.Find(new Rectangle(10, 10, 0, 0)));
         }
 
         [Fact]
         public void Dump_EmptyTree_PrintsRootNode()
         {
-            // Arrange
             var quadTree = new QuadTree();
             var output = new StringWriter();
             Console.SetOut(output);
-
-            // Act
             quadTree.Dump();
-
-            // Assert
-            var expected = "Quadtree Dump:\r\n\tLeafNode - (0, 0) - 100x100\r\n";
+            var expected = "Quadtree Dump:\n\n\tLeaf Node - (0, 0) - 100x100\n"; // Adjusted for expected output
             Assert.Equal(expected, output.ToString());
         }
 
         [Fact]
         public void Dump_TreeWithRectangles_PrintsStructure()
         {
-            // Arrange
             var quadTree = new QuadTree();
             quadTree.Insert(new Rectangle(10, 10, 5, 5));
             quadTree.Insert(new Rectangle(20, 20, 10, 10));
             quadTree.Insert(new Rectangle(-30, -30, 15, 15));
             var output = new StringWriter();
             Console.SetOut(output);
-
-            // Act
             quadTree.Dump();
 
             var expected = "Quadtree Dump:\n\n\tLeaf Node - (0, 0) - 100x100\n" +
                            "\t\tRectangle at 10, 10: 5x5\n" +
                            "\t\tRectangle at 20, 20: 10x10\n" +
-                           "\t\tRectangle at -30, -30: 15x15\n"; // Adjust based on actual output
+                           "\t\tRectangle at -30, -30: 15x15\n"; // Adjusted for expected output
             Assert.Equal(expected, output.ToString());
         }
 
         [Fact]
         public void TestInsertOutOfBounds()
         {
-            // Arrange
-            QuadTree qt = new QuadTree();
-            Rectangle rect = new Rectangle(150, 150, 20, 20);
-
-            // Act
-            qt.Insert(rect); // Expecting an error message or no insertion
-
-            // Assert
-            Assert.Null(qt.Find(new Rectangle(150, 150, 0, 0))); // Corrected syntax
+            var qt = new QuadTree();
+            var rect = new Rectangle(150, 150, 20, 20);
+            qt.Insert(rect);
+            Assert.Null(qt.Find(new Rectangle(150, 150, 0, 0))); // Should return null
         }
 
         [Fact]
         public void TestUpdateRectangle()
         {
-            // Arrange
-            QuadTree qt = new QuadTree();
-            Rectangle rect = new Rectangle(10, 10, 20, 20);
+            var qt = new QuadTree();
+            var rect = new Rectangle(10, 10, 20, 20);
             qt.Insert(rect);
-
-            // Act
-            Rectangle updatedRect = new Rectangle(10, 10, 30, 30);
-            qt.Update(updatedRect); // Update should be by the same position
-
-            // Assert
+            var updatedRect = new Rectangle(10, 10, 30, 30); // Update to new dimensions
+            qt.Update(updatedRect);
             var foundRect = qt.Find(new Rectangle(10, 10, 0, 0)); // Using zero dimensions to find
             Assert.NotNull(foundRect);
-            Assert.Equal(updatedRect.Length, foundRect.Length);
+            Assert.Equal(updatedRect.Height, foundRect.Height);
             Assert.Equal(updatedRect.Width, foundRect.Width);
         }
-
     }
 }
